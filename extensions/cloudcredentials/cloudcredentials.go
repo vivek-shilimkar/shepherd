@@ -15,13 +15,14 @@ const (
 // CloudCredential is the main struct needed to create a cloud credential depending on the outside cloud service provider
 type CloudCredential struct {
 	types.Resource
-	Annotations                  map[string]string              `json:"annotations,omitempty"`
-	Created                      string                         `json:"created,omitempty"`
-	CreatorID                    string                         `json:"creatorId,omitempty"`
-	Description                  string                         `json:"description,omitempty"`
-	Labels                       map[string]string              `json:"labels,omitempty"`
-	Name                         string                         `json:"name,omitempty"`
-	Removed                      string                         `json:"removed,omitempty"`
+	Annotations                  map[string]string `json:"annotations,omitempty"`
+	Created                      string            `json:"created,omitempty"`
+	CreatorID                    string            `json:"creatorId,omitempty"`
+	Description                  string            `json:"description,omitempty"`
+	Labels                       map[string]string `json:"labels,omitempty"`
+	Name                         string            `json:"name,omitempty"`
+	Removed                      string
+	AlibabaCredentialConfig      *AlibabaCredentialConfig       `json:"alibabacredentialConfig,omitempty"`
 	AmazonEC2CredentialConfig    *AmazonEC2CredentialConfig     `json:"amazonec2credentialConfig,omitempty"`
 	AzureCredentialConfig        *AzureCredentialConfig         `json:"azurecredentialConfig,omitempty"`
 	DigitalOceanCredentialConfig *DigitalOceanCredentialConfig  `json:"digitaloceancredentialConfig,omitempty"`
@@ -90,6 +91,14 @@ func LoadCloudCredential(provider string) CloudCredential {
 
 		config.LoadConfig(GoogleCredentialConfigurationFileKey, &googleCredentialConfig)
 		cloudCredential.GoogleCredentialConfig = &googleCredentialConfig
+
+		return cloudCredential
+
+	case provider == providers.Alibaba:
+		var alibabaCredentialConfig AlibabaCredentialConfig
+
+		config.LoadConfig(AlibabaCredentialConfigurationFileKey, &alibabaCredentialConfig)
+		cloudCredential.AlibabaCredentialConfig = &alibabaCredentialConfig
 
 		return cloudCredential
 
